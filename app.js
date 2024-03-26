@@ -5,6 +5,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const cors = require("cors");
 
 const mongoDb =
   "mongodb+srv://sevaleonov:0Gp3XV96NbAIr5C6@cluster0.zjlmdta.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -21,6 +22,7 @@ const User = mongoose.model(
 );
 
 const app = express();
+app.use(cors());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
