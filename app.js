@@ -69,7 +69,13 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
-app.get("/sign-up", (req, res) => res.render("sign-up-form"));
+
+app.get("/sign-up", (req, res) => {
+  console.log(req);
+  console.log(res);
+
+  res.render("sign-up-form");
+});
 app.post("/sign-up", async (req, res, next) => {
   try {
     const user = new User({
