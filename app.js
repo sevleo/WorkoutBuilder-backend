@@ -66,10 +66,12 @@ app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
+// Parses incoming request bodies with JSON payloads
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
-
 app.get("/sign-up", (req, res) => {
   console.log(req);
   console.log(res);
@@ -88,13 +90,40 @@ app.post("/sign-up", async (req, res, next) => {
     return next(err);
   }
 });
-app.post(
-  "/log-in",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  })
-);
+
+// app.post(
+//   "/log-in",
+//   (req, res, next) => {
+//     console.log("Received login request for username:", req.body.username);
+//     console.log("Request:", req.body);
+//     console.log("Response:", res);
+
+//     next();
+//   },
+//   passport.authenticate("local", {
+//     successRedirect: "/",
+//     failureRedirect: "/",
+//   })
+// );
+
+app.post("/log-in", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "Incorrect username or password" });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect("/"); // or return res.json({ user: req.user });
+    });
+  })(req, res, next);
+});
 
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {
