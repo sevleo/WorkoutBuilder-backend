@@ -22,7 +22,14 @@ const User = mongoose.model(
 );
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+
+// Allow credentials (cookies, authorization headers, etc.)
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
@@ -91,21 +98,6 @@ app.post("/sign-up", async (req, res, next) => {
   }
 });
 
-// app.post(
-//   "/log-in",
-//   (req, res, next) => {
-//     console.log("Received login request for username:", req.body.username);
-//     console.log("Request:", req.body);
-//     console.log("Response:", res);
-
-//     next();
-//   },
-//   passport.authenticate("local", {
-//     successRedirect: "/",
-//     failureRedirect: "/",
-//   })
-// );
-
 app.post("/log-in", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -120,9 +112,20 @@ app.post("/log-in", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/"); // or return res.json({ user: req.user });
+      return res.redirect("/");
     });
   })(req, res, next);
+});
+
+app.get("/check-login", (req, res) => {
+  console.log(req.isAuthenticated());
+  if (req.isAuthenticated()) {
+    // User is logged in
+    res.status(200).json({ isLoggedIn: true, user: req.user });
+  } else {
+    // User is not logged in
+    res.status(200).json({ isLoggedIn: false });
+  }
 });
 
 app.get("/log-out", (req, res, next) => {
@@ -130,8 +133,10 @@ app.get("/log-out", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    // res.redirect("/");
+    res.status(200).send("Logged out successfully.");
   });
+  console.log(req);
 });
 
 app.listen(3001, () => console.log("app listening on port 3001!"));
