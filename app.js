@@ -91,12 +91,17 @@ app.get("/sign-up", (req, res) => {
 app.post("/sign-up", async (req, res, next) => {
   try {
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-      const user = new User({
+      const newUser = new User({
         username: req.body.username,
         password: hashedPassword,
       });
-      const result = await user.save();
-      res.redirect("/");
+      const user = await User.findOne({ username: req.body.username });
+      if (!user) {
+        const result = await newUser.save();
+        res.redirect("/");
+      } else {
+        return res.status(409).json({ message: "Username exists" });
+      }
     });
   } catch (err) {
     return next(err);
