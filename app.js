@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 
 const mongoDb =
   "mongodb+srv://sevaleonov:0Gp3XV96NbAIr5C6@cluster0.zjlmdta.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -43,7 +44,8 @@ passport.use(
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
-      if (user.password !== password) {
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
         return done(null, false, { message: "Incorrect password" });
       }
       return done(null, user);
@@ -85,14 +87,17 @@ app.get("/sign-up", (req, res) => {
 
   res.render("sign-up-form");
 });
+
 app.post("/sign-up", async (req, res, next) => {
   try {
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password,
+    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+      const user = new User({
+        username: req.body.username,
+        password: hashedPassword,
+      });
+      const result = await user.save();
+      res.redirect("/");
     });
-    const result = await user.save();
-    res.redirect("/");
   } catch (err) {
     return next(err);
   }
@@ -112,7 +117,8 @@ app.post("/log-in", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/");
+      //   return res.redirect("/");
+      return res.status(200).json({ user: user });
     });
   })(req, res, next);
 });
@@ -121,7 +127,11 @@ app.get("/check-login", (req, res) => {
   console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     // User is logged in
-    res.status(200).json({ isLoggedIn: true, user: req.user });
+    res.locals.currentUser = req.user;
+    res.status(200).json({
+      isLoggedIn: true,
+      user: req.user,
+    });
   } else {
     // User is not logged in
     res.status(200).json({ isLoggedIn: false });
