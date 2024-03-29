@@ -108,7 +108,7 @@ app.post("/sign-up", async (req, res, next) => {
   }
 });
 
-app.post("/log-in", (req, res, next) => {
+app.post("/login/password", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -116,13 +116,12 @@ app.post("/log-in", (req, res, next) => {
     if (!user) {
       return res
         .status(401)
-        .json({ message: "Incorrect username or password" });
+        .json({ message: info.message || "Incorrect username or password" });
     }
     req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
-      //   return res.redirect("/");
       return res.status(200).json({ user: user });
     });
   })(req, res, next);
