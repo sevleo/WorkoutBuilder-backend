@@ -1,8 +1,11 @@
+require("dotenv").config(); // This makes .env file available to "process"
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
+const SQLiteStore = require("connect-sqlite3")(session);
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const GoogleStrategy = require("passport-google-oidc");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const cors = require("cors");
@@ -18,7 +21,8 @@ const User = mongoose.model(
   "User",
   new Schema({
     username: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
+    googleId: { type: String, required: false },
   })
 );
 
@@ -55,23 +59,71 @@ passport.use(
   })
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env["GOOGLE_CLIENT_ID"],
+      clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
+      callbackURL: "/oauth2/redirect/google",
+      scope: ["profile"],
+    },
+
+    async (issuer, profile, done) => {
+      try {
+        console.log(issuer);
+        console.log(profile);
+        let user = await User.findOne({ googleId: profile.id });
+        if (!user) {
+          user = new User({
+            username: profile.displayName,
+            googleId: profile.id,
+          });
+          await user.save();
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const user = await User.findById(id);
+//     done(null, user);
+//   } catch (err) {
+//     done(err);
+//   }
+// });
+passport.serializeUser(function (user, cb) {
+  process.nextTick(function () {
+    cb(null, { id: user.id, username: user.username, name: user.name });
+  });
 });
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
+passport.deserializeUser(function (user, cb) {
+  process.nextTick(function () {
+    return cb(null, user);
+  });
 });
 
 app.set("views", __dirname);
 app.set("view engine", "ejs");
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+// app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
+  })
+);
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
@@ -87,6 +139,15 @@ app.get("/sign-up", (req, res) => {
 
   res.render("sign-up-form");
 });
+
+app.get("/login/federated/google", passport.authenticate("google"));
+app.get(
+  "/oauth2/redirect/google",
+  passport.authenticate("google", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  })
+);
 
 app.post("/sign-up", async (req, res, next) => {
   try {
