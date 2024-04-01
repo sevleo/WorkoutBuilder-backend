@@ -140,14 +140,26 @@ app.get("/sign-up", (req, res) => {
   res.render("sign-up-form");
 });
 
-app.get("/login/federated/google", passport.authenticate("google"));
+app.get("/login/federated/google", (req, res, next) => {
+  console.log(req.query.redirect);
+  const redirectUrl = req.query.redirect || "/";
+  passport.authenticate("google")(req, res, next);
+  //   passport.authenticate("google", {
+  //     callbackURL: redirectUrl,
+  //   })(req, res, next);
+});
+
 app.get(
   "/oauth2/redirect/google",
   passport.authenticate("google", {
-    successRedirect: "/",
+    successRedirect: "/redirect",
     failureRedirect: "/login",
   })
 );
+
+app.get("/redirect", async (req, res, next) => {
+  res.redirect("http://localhost:5173/sign-in");
+});
 
 app.post("/sign-up", async (req, res, next) => {
   try {
