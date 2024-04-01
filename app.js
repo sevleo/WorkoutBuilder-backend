@@ -141,19 +141,15 @@ app.get("/sign-up", (req, res) => {
 });
 
 app.get("/login/federated/google", (req, res, next) => {
-  console.log(req.query.redirect);
-  const redirectUrl = req.query.redirect || "/";
+  //   console.log(req.query.redirect);
   passport.authenticate("google")(req, res, next);
-  //   passport.authenticate("google", {
-  //     callbackURL: redirectUrl,
-  //   })(req, res, next);
 });
 
 app.get(
   "/oauth2/redirect/google",
   passport.authenticate("google", {
     successRedirect: "/redirect",
-    failureRedirect: "/login",
+    failureRedirect: "/redirect",
   })
 );
 
