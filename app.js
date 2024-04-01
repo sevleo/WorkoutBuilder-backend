@@ -197,7 +197,7 @@ app.post("/login/password", (req, res, next) => {
 });
 
 app.get("/check-login", (req, res) => {
-  console.log(req.isAuthenticated());
+  console.log(`check-login: ${req.isAuthenticated()}`);
   if (req.isAuthenticated()) {
     // User is logged in
     res.locals.currentUser = req.user;
