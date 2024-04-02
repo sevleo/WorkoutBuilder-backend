@@ -154,7 +154,7 @@ app.get(
 );
 
 app.get("/redirect", async (req, res, next) => {
-  res.redirect("http://localhost:5173/sign-in");
+  res.redirect("http://localhost:5173/");
 });
 
 app.post("/sign-up", async (req, res, next) => {
