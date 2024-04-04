@@ -159,6 +159,12 @@ app.get("/redirect", async (req, res, next) => {
 
 app.post("/sign-up", async (req, res, next) => {
   try {
+    if (req.body.username === "") {
+      return res.status(409).json({ message: "Username missing" });
+    }
+    if (req.body.password === "") {
+      return res.status(409).json({ message: "Password missing" });
+    }
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       const newUser = new User({
         username: req.body.username,
