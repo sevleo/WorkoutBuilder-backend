@@ -5,6 +5,7 @@ const SQLiteStore = require("connect-sqlite3")(session);
 const mongoose = require("mongoose");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
+const path = require("path");
 
 // Database setup
 const mongoDb =
@@ -28,6 +29,8 @@ app.use((req, res, next) => {
 
 // View engine setup
 app.set("views", __dirname);
+app.set("views", path.join(__dirname, "views"));
+
 app.set("view engine", "ejs");
 app.use(
   session({
