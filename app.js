@@ -12,18 +12,21 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 
 const mongoDb =
-  "mongodb+srv://sevaleonov:0Gp3XV96NbAIr5C6@cluster0.zjlmdta.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://sevaleonov:0Gp3XV96NbAIr5C6@cluster0.zjlmdta.mongodb.net/userData?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoDb);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
 const User = mongoose.model(
   "User",
-  new Schema({
-    username: { type: String, required: true },
-    password: { type: String, required: false },
-    googleId: { type: String, required: false },
-  })
+  new Schema(
+    {
+      username: { type: String, required: true },
+      password: { type: String, required: false },
+      googleId: { type: String, required: false },
+    },
+    { collection: "users" }
+  )
 );
 
 const app = express();
