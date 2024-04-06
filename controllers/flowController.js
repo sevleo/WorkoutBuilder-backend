@@ -17,7 +17,13 @@ exports.create_flow = asyncHandler(async (req, res, next) => {
 });
 
 exports.flow_list = asyncHandler(async (req, res, next) => {
+  console.log(req.query);
   const allFlows = await Flow.find({ userId: req.query.userId });
   console.log(allFlows);
   res.status(200).json({ message: allFlows });
+});
+
+exports.delete_flow = asyncHandler(async (req, res, next) => {
+  await Flow.findByIdAndDelete(req.query.flowId);
+  res.status(200).json({ message: "deleted successfully" });
 });

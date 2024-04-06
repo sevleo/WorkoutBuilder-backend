@@ -33,7 +33,10 @@ router.post("/sign-up", auth_controller.signUp);
 // Add new flow
 router.post("/new-flow", flow_controller.create_flow);
 
-// Add new flow
+// Show user's flows
 router.get("/flows", flow_controller.flow_list);
+
+// Delete a flow
+router.get("/delete-flow", flow_controller.delete_flow);
 
 module.exports = router;
