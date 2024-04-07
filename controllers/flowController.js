@@ -3,14 +3,17 @@ const Flow = require("../models/flow");
 const flow = require("../models/flow");
 
 exports.create_flow = asyncHandler(async (req, res, next) => {
+  console.log(req.body.flowData);
   try {
     const newFlow = new Flow({
       userId: req.body.userId,
       flowName: req.body.flowName,
       difficulty: req.body.flowDifficulty,
+      flowData: req.body.flowData,
     });
     await newFlow.save();
-    res.status(200).json({ message: "Flow added" });
+
+    res.status(200).json({ message: newFlow });
   } catch (err) {
     return next(err);
   }
@@ -31,11 +34,24 @@ exports.update_flow = asyncHandler(async (req, res, next) => {
   console.log(req);
   try {
     const editedFlowName = req.body.flowName;
-    const updatedFlow = await Flow.findByIdAndUpdate(
-      req.body.flowId,
-      { flowName: editedFlowName },
-      { new: true }
-    );
+    const editedFlowData = req.body.flowData;
+
+    let updatedFlow;
+
+    if (editedFlowName) {
+      updatedFlow = await Flow.findByIdAndUpdate(
+        req.body.flowId,
+        { flowName: editedFlowName },
+        { new: true }
+      );
+    }
+    if (editedFlowData) {
+      updatedFlow = await Flow.findByIdAndUpdate(
+        req.body.flowId,
+        { flowData: editedFlowData },
+        { new: true }
+      );
+    }
 
     if (!updatedFlow) {
       return res.status(404).json({ message: "Flow not found" });
