@@ -39,4 +39,7 @@ router.get("/flows", flow_controller.flow_list);
 // Delete a flow
 router.get("/delete-flow", flow_controller.delete_flow);
 
+// Update a flow
+router.put("/update-flow", flow_controller.update_flow);
+
 module.exports = router;
