@@ -7,6 +7,7 @@ const FlowSchema = new Schema(
     flowName: { type: String, required: true },
     difficulty: { type: String, required: false },
     flowData: { type: Object },
+    creationDate: { type: Date },
   },
   { collection: "flows" }
 );

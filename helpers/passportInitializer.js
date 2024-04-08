@@ -40,6 +40,7 @@ passport.use(
           user = new User({
             username: profile.displayName,
             googleId: profile.id,
+            creationDate: new Date(),
           });
           await user.save();
         }

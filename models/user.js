@@ -6,6 +6,7 @@ const UserSchema = new Schema(
     username: { type: String, required: true },
     password: { type: String, required: false },
     googleId: { type: String, required: false },
+    creationDate: { type: Date },
   },
   { collection: "users" }
 );

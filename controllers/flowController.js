@@ -10,6 +10,7 @@ exports.create_flow = asyncHandler(async (req, res, next) => {
       flowName: req.body.flowName,
       difficulty: req.body.flowDifficulty,
       flowData: req.body.flowData,
+      creationDate: new Date(),
     });
     await newFlow.save();
 
