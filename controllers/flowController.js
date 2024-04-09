@@ -3,7 +3,6 @@ const Flow = require("../models/flow");
 const flow = require("../models/flow");
 
 exports.create_flow = asyncHandler(async (req, res, next) => {
-  console.log(req.body.flowData);
   try {
     const newFlow = new Flow({
       userId: req.body.userId,
@@ -26,32 +25,35 @@ exports.flow_list = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: allFlows });
 });
 
+exports.get_flow = asyncHandler(async (req, res, next) => {
+  const flow = await Flow.findOne({ _id: req.query.flowId });
+  console.log(flow);
+  res.status(200).json({ message: flow });
+});
+
 exports.delete_flow = asyncHandler(async (req, res, next) => {
   await Flow.findByIdAndDelete(req.query.flowId);
   res.status(200).json({ message: "deleted successfully" });
 });
 
 exports.update_flow = asyncHandler(async (req, res, next) => {
-  console.log(req);
   try {
     const editedFlowName = req.body.flowName;
+    const editedFlowDifficulty = req.body.flowDifficulty;
     const editedFlowData = req.body.flowData;
 
     let updatedFlow;
 
-    if (editedFlowName) {
-      updatedFlow = await Flow.findByIdAndUpdate(
-        req.body.flowId,
-        { flowName: editedFlowName },
-        { new: true }
-      );
+    if (editedFlowName || editedFlowDifficulty) {
+      updatedFlow = await Flow.findByIdAndUpdate(req.body.flowId, {
+        flowName: editedFlowName,
+        difficulty: editedFlowDifficulty,
+      });
     }
     if (editedFlowData) {
-      updatedFlow = await Flow.findByIdAndUpdate(
-        req.body.flowId,
-        { flowData: editedFlowData },
-        { new: true }
-      );
+      updatedFlow = await Flow.findByIdAndUpdate(req.body.flowId, {
+        flowData: editedFlowData,
+      });
     }
 
     if (!updatedFlow) {

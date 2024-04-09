@@ -36,6 +36,9 @@ router.post("/new-flow", flow_controller.create_flow);
 // Show user's flows
 router.get("/flows", flow_controller.flow_list);
 
+// Get a single flow
+router.get("/get-flow", flow_controller.get_flow);
+
 // Delete a flow
 router.get("/delete-flow", flow_controller.delete_flow);
 
