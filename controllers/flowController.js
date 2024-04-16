@@ -48,11 +48,12 @@ exports.update_flow = asyncHandler(async (req, res, next) => {
       updatedFlow = await Flow.findByIdAndUpdate(req.body.flowId, {
         flowName: editedFlowName,
         difficulty: editedFlowDifficulty,
+        flowData: { ...editedFlowData, flowName: editedFlowName },
       });
     }
     if (editedFlowData) {
       updatedFlow = await Flow.findByIdAndUpdate(req.body.flowId, {
-        flowData: editedFlowData,
+        flowData: { ...editedFlowData, flowName: editedFlowName },
       });
     }
 
