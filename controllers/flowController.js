@@ -4,6 +4,17 @@ const flow = require("../models/flow");
 
 exports.create_flow = asyncHandler(async (req, res, next) => {
   try {
+    console.log(req.body);
+    const existingFlow = await Flow.find({
+      flowName: req.body.flowName,
+      userId: req.body.userId,
+    });
+    if (existingFlow.length > 0) {
+      return res
+        .status(409)
+        .json({ message: "Flow with this name already exists" });
+    }
+
     const newFlow = new Flow({
       userId: req.body.userId,
       flowName: req.body.flowName,
