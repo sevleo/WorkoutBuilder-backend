@@ -18,7 +18,6 @@ exports.create_flow = asyncHandler(async (req, res, next) => {
     const newFlow = new Flow({
       userId: req.body.userId,
       flowName: req.body.flowName,
-      difficulty: req.body.flowDifficulty,
       flowData: req.body.flowData,
       creationDate: new Date(),
     });
@@ -49,16 +48,26 @@ exports.delete_flow = asyncHandler(async (req, res, next) => {
 
 exports.update_flow = asyncHandler(async (req, res, next) => {
   try {
+    console.log(req.body);
+    const existingFlow = await Flow.find({
+      flowName: req.body.flowName,
+      userId: req.body.userId,
+    });
+    console.log(existingFlow);
+    if (existingFlow.length > 0) {
+      return res
+        .status(409)
+        .json({ message: "Flow with this name already exists" });
+    }
+
     const editedFlowName = req.body.flowName;
-    const editedFlowDifficulty = req.body.flowDifficulty;
     const editedFlowData = req.body.flowData;
 
     let updatedFlow;
 
-    if (editedFlowName || editedFlowDifficulty) {
+    if (editedFlowName) {
       updatedFlow = await Flow.findByIdAndUpdate(req.body.flowId, {
         flowName: editedFlowName,
-        difficulty: editedFlowDifficulty,
         flowData: { ...editedFlowData, flowName: editedFlowName },
       });
     }
