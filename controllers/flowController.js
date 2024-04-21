@@ -52,6 +52,7 @@ exports.update_flow = asyncHandler(async (req, res, next) => {
     const existingFlow = await Flow.find({
       flowName: req.body.flowName,
       userId: req.body.userId,
+      _id: { $ne: req.body.flowId },
     });
     console.log(existingFlow);
     if (existingFlow.length > 0) {
