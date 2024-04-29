@@ -43,4 +43,5 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/", indexRouter);
 
-app.listen(3001, () => console.log("app listening on port 3001!"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("app listening on port 3001!"));
