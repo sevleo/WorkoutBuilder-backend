@@ -8,8 +8,7 @@ const indexRouter = require("./routes/index");
 const path = require("path");
 
 // Database setup
-const mongoDb =
-  "mongodb+srv://sevaleonov:0Gp3XV96NbAIr5C6@cluster0.zjlmdta.mongodb.net/userData?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDb = process.env["MONGO_DB"];
 mongoose.connect(mongoDb);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
