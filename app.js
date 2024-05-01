@@ -43,9 +43,9 @@ app.use(
     saveUninitialized: false,
     store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
     cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: "none",
+      // secure: true,
+      // httpOnly: true,
+      // sameSite: "none",
     },
   })
 );
