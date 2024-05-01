@@ -41,6 +41,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
+    cookie: {
+      secure: true,
+    },
   })
 );
 app.use(express.urlencoded({ extended: false }));
