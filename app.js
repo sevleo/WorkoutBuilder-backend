@@ -17,10 +17,14 @@ const app = express();
 
 // Allow credentials (cookies, authorization headers, etc.)
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://yogato.netlify.app"],
   credentials: true,
 };
+
+// app.options("*", cors(corsOptions));
+
 app.use(cors(corsOptions));
+
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
