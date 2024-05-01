@@ -18,6 +18,7 @@ const app = express();
 // Allow credentials (cookies, authorization headers, etc.)
 const corsOptions = {
   origin: ["http://localhost:5173", "https://yogato.netlify.app"],
+  methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
   credentials: true,
 };
 
@@ -42,9 +43,9 @@ app.use(
     saveUninitialized: false,
     store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
     cookie: {
-      secure: true,
+      // secure: true,
       // httpOnly: true,
-      sameSite: false,
+      // sameSite: false,
     },
   })
 );
