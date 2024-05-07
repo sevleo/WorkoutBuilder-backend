@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
 const path = require("path");
+const passport = require("./helpers/passportInitializer");
 
 // Database setup
 const mongoDb = process.env["MONGO_DB"];
@@ -55,6 +56,8 @@ app.use(
     },
   })
 );
+
+app.use(passport.session());
 
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "https://yogato.netlify.app"); // update to match the domain you will make the request from
