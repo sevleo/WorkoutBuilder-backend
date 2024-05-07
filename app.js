@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
 const path = require("path");
+const passport = require("./helpers/passportInitializer");
 
 // Database setup
 const mongoDb = process.env["MONGO_DB"];
@@ -49,12 +50,15 @@ app.use(
     saveUninitialized: false,
     store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
     cookie: {
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "none",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
     },
   })
 );
+
+app.use(passport.session());
 
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "https://yogato.netlify.app"); // update to match the domain you will make the request from

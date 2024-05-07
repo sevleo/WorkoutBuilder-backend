@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("../helpers/passportInitializer");
-
-router.use(passport.session());
 
 // Require controller modules
 const navigation_controller = require("../controllers/navigationController");
