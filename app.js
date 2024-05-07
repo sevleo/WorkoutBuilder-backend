@@ -49,7 +49,7 @@ app.use(
     saveUninitialized: false,
     store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
     cookie: {
-      secure: true,
+      secure: false,
       httpOnly: true,
       sameSite: "None",
     },
@@ -71,5 +71,5 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/", indexRouter);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log("app listening on port 3001!"));
