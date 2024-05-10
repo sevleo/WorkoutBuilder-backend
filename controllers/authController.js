@@ -15,7 +15,7 @@ exports.redirectGoogle = asyncHandler(async (req, res, next) => {
 });
 
 exports.redirectFrontend = asyncHandler(async (req, res, next) => {
-  res.redirect("http://localhost:5173/");
+  res.redirect(process.env.FRONTEND_URL);
 });
 
 exports.loginPassword = asyncHandler(async (req, res, next) => {
