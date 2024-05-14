@@ -1,5 +1,3 @@
-# YoGato
+# YoGato-backend
 
-Workout sequence builder.
-
-Backend for [YoGato](https://github.com/sevleo/YoGato)
+Backend for [YoGato](https://github.com/sevleo/YoGato).
