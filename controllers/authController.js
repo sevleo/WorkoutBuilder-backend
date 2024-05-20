@@ -9,13 +9,20 @@ exports.loginFederatedGoogle = asyncHandler(async (req, res, next) => {
 
 exports.redirectGoogle = asyncHandler(async (req, res, next) => {
   passport.authenticate("google", {
-    successRedirect: "/redirect",
-    failureRedirect: "/redirect",
+    successRedirect: "/redirect/",
+    failureRedirect: "/redirect/sign-in",
   })(req, res, next);
+  console.log("After passport.authenticate");
+  console.log("Request:", req);
+  console.log("Response:", res);
 });
 
 exports.redirectFrontend = asyncHandler(async (req, res, next) => {
   res.redirect(process.env.FRONTEND_URL);
+});
+
+exports.redirectFrontendSignIn = asyncHandler(async (req, res, next) => {
+  res.redirect(process.env.FRONTEND_URL + "/sign-in");
 });
 
 exports.loginPassword = asyncHandler(async (req, res, next) => {

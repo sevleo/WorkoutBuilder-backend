@@ -14,6 +14,7 @@ router.get("/sign-up", navigation_controller.signup);
 router.get("/login/federated/google", auth_controller.loginFederatedGoogle);
 router.get("/oauth2/redirect/google", auth_controller.redirectGoogle);
 router.get("/redirect", auth_controller.redirectFrontend);
+router.get("/redirect/sign-in", auth_controller.redirectFrontendSignIn);
 
 // Password login API
 router.post("/login/password", auth_controller.loginPassword);
