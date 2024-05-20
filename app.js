@@ -43,20 +43,23 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.set("trust proxy", 1);
 
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      sameSite: "none",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    },
-  })
-);
+const sessionConfig = {
+  secret: "keyboard cat",
+  resave: false,
+  saveUninitialized: false,
+  store: new SQLiteStore({ db: "sessions.db", dir: "./var" }),
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  },
+};
+
+if (process.env.NODE_ENV === "production") {
+  sessionConfig.cookie.sameSite = "none";
+}
+
+app.use(session(sessionConfig));
 
 app.use(passport.session());
 
