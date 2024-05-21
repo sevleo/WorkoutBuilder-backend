@@ -33,7 +33,6 @@ passport.use(
     },
 
     async (issuer, profile, done) => {
-      console.log("test");
       try {
         console.log(issuer);
         console.log(profile);
@@ -43,6 +42,7 @@ passport.use(
             username: profile.displayName,
             googleId: profile.id,
             creationDate: new Date(),
+            type: "google",
           });
           await user.save();
         }

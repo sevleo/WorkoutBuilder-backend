@@ -81,6 +81,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
         username: req.body.username,
         password: hashedPassword,
         creationDate: new Date(),
+        type: "password",
       });
       const user = await User.findOne({ username: req.body.username });
       if (!user) {
