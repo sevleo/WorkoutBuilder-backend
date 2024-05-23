@@ -12,9 +12,6 @@ exports.redirectGoogle = asyncHandler(async (req, res, next) => {
     successRedirect: "/redirect/",
     failureRedirect: "/redirect/sign-in",
   })(req, res, next);
-  console.log("After passport.authenticate");
-  console.log("Request:", req);
-  console.log("Response:", res);
 });
 
 exports.redirectFrontend = asyncHandler(async (req, res, next) => {
@@ -39,18 +36,44 @@ exports.loginPassword = asyncHandler(async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.status(200).json({ user: user });
+      return res.status(200).json({ user: user, type: user.type });
     });
   })(req, res, next);
+});
+
+exports.updatePassword = asyncHandler(async (req, res, done) => {
+  try {
+    const user = await User.findOne({ _id: req.body.userId });
+    const match = await bcrypt.compare(
+      req.body.currentPassword,
+      user._doc.password
+    );
+
+    if (!match) {
+      return res
+        .status(401)
+        .json({ message: "The current password you entered is incorrect" });
+    } else {
+      bcrypt.hash(req.body.newPassword, 10, async (err, hashedPassword) => {
+        const newPassword = hashedPassword;
+        await user.updateOne({ password: newPassword });
+      });
+    }
+    res.status(200).json({ message: "Successfully updated password" });
+  } catch (err) {
+    return done(err);
+  }
 });
 
 exports.checkLogin = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
     // User is logged in
     res.locals.currentUser = req.user;
+    const user = await User.findOne({ username: req.user.username });
     res.status(200).json({
       isLoggedIn: true,
       user: req.user,
+      type: user.type,
     });
   } else {
     // User is not logged in

@@ -34,8 +34,8 @@ passport.use(
 
     async (issuer, profile, done) => {
       try {
-        console.log(issuer);
-        console.log(profile);
+        // console.log(issuer);
+        // console.log(profile);
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
           user = new User({

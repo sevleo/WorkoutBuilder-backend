@@ -19,6 +19,9 @@ router.get("/redirect/sign-in", auth_controller.redirectFrontendSignIn);
 // Password login API
 router.post("/login/password", auth_controller.loginPassword);
 
+// Update password API
+router.post("/update-password", auth_controller.updatePassword);
+
 // Check login status API
 router.get("/check-login", auth_controller.checkLogin);
 
