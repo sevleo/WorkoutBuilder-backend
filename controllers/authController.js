@@ -14,6 +14,17 @@ exports.redirectGoogle = asyncHandler(async (req, res, next) => {
   })(req, res, next);
 });
 
+exports.loginFederatedFacebook = asyncHandler(async (req, res, next) => {
+  passport.authenticate("facebook")(req, res, next);
+});
+
+exports.redirectFacebook = asyncHandler(async (req, res, next) => {
+  passport.authenticate("facebook", {
+    successRedirect: "/redirect/",
+    failureRedirect: "/redirect/sign-in",
+  })(req, res, next);
+});
+
 exports.redirectFrontend = asyncHandler(async (req, res, next) => {
   res.redirect(process.env.FRONTEND_URL);
 });
