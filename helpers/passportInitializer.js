@@ -1,7 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oidc");
-const FacebookStrategy = require("passport-facebook");
+// const FacebookStrategy = require("passport-facebook");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
@@ -55,35 +55,35 @@ passport.use(
   )
 );
 
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: process.env["FACEBOOK_CLIENT_ID"],
-      clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
-      callbackURL: "/oauth2/redirect/facebook",
-      state: true,
-    },
+// passport.use(
+//   new FacebookStrategy(
+//     {
+//       clientID: process.env["FACEBOOK_CLIENT_ID"],
+//       clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
+//       callbackURL: "/oauth2/redirect/facebook",
+//       state: true,
+//     },
 
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ facebookId: profile.id });
-        console.log(profile);
-        if (!user) {
-          user = new User({
-            username: profile.displayName,
-            facebookId: profile.id,
-            creationDate: new Date(),
-            type: "facebook",
-          });
-          await user.save();
-        }
-        return done(null, user);
-      } catch (error) {
-        return done(error);
-      }
-    }
-  )
-);
+//     async (accessToken, refreshToken, profile, done) => {
+//       try {
+//         let user = await User.findOne({ facebookId: profile.id });
+//         console.log(profile);
+//         if (!user) {
+//           user = new User({
+//             username: profile.displayName,
+//             facebookId: profile.id,
+//             creationDate: new Date(),
+//             type: "facebook",
+//           });
+//           await user.save();
+//         }
+//         return done(null, user);
+//       } catch (error) {
+//         return done(error);
+//       }
+//     }
+//   )
+// );
 
 passport.serializeUser(function (user, cb) {
   process.nextTick(function () {

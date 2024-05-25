@@ -17,8 +17,8 @@ router.get("/redirect", auth_controller.redirectFrontend);
 router.get("/redirect/sign-in", auth_controller.redirectFrontendSignIn);
 
 // Facebook login API
-router.get("/login/federated/facebook", auth_controller.loginFederatedFacebook);
-router.get("/oauth2/redirect/facebook", auth_controller.redirectFacebook);
+// router.get("/login/federated/facebook", auth_controller.loginFederatedFacebook);
+// router.get("/oauth2/redirect/facebook", auth_controller.redirectFacebook);
 
 // Password login API
 router.post("/login/password", auth_controller.loginPassword);
