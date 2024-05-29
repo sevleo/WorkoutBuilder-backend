@@ -76,6 +76,16 @@ exports.updatePassword = asyncHandler(async (req, res, done) => {
   }
 });
 
+exports.updateDisplayName = asyncHandler(async (req, res, done) => {
+  try {
+    const user = await User.findOne({ _id: req.body.userId });
+    await user.updateOne({ displayName: req.body.displayName });
+    res.status(200).json({ message: "Successfully updated display name" });
+  } catch (err) {
+    return done(err);
+  }
+});
+
 exports.checkLogin = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
     // User is logged in
@@ -83,6 +93,7 @@ exports.checkLogin = asyncHandler(async (req, res) => {
     const user = await User.findOne({ username: req.user.username });
     res.status(200).json({
       isLoggedIn: true,
+      displayName: user.displayName,
       user: req.user,
       type: user.type,
     });
@@ -113,6 +124,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       const newUser = new User({
         username: req.body.username,
+        displayName: req.body.username,
         password: hashedPassword,
         creationDate: new Date(),
         type: "password",

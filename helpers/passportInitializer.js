@@ -41,6 +41,7 @@ passport.use(
         if (!user) {
           user = new User({
             username: profile.displayName,
+            displayName: profile.displayName,
             googleId: profile.id,
             creationDate: new Date(),
             type: "google",

@@ -26,6 +26,9 @@ router.post("/login/password", auth_controller.loginPassword);
 // Update password API
 router.post("/update-password", auth_controller.updatePassword);
 
+// Update displayName API
+router.post("/update-displayname", auth_controller.updateDisplayName);
+
 // Check login status API
 router.get("/check-login", auth_controller.checkLogin);
 

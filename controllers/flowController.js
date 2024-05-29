@@ -4,7 +4,6 @@ const flow = require("../models/flow");
 
 exports.create_flow = asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.body);
     const existingFlow = await Flow.find({
       flowName: req.body.flowName,
       userId: req.body.userId,
@@ -31,13 +30,11 @@ exports.create_flow = asyncHandler(async (req, res, next) => {
 
 exports.flow_list = asyncHandler(async (req, res, next) => {
   const allFlows = await Flow.find({ userId: req.query.userId });
-  console.log(allFlows);
   res.status(200).json({ message: allFlows });
 });
 
 exports.get_flow = asyncHandler(async (req, res, next) => {
   const flow = await Flow.findOne({ _id: req.query.flowId });
-  console.log(flow);
   res.status(200).json({ message: flow });
 });
 
@@ -48,13 +45,11 @@ exports.delete_flow = asyncHandler(async (req, res, next) => {
 
 exports.update_flow = asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.body);
     const existingFlow = await Flow.find({
       flowName: req.body.flowName,
       userId: req.body.userId,
       _id: { $ne: req.body.flowId },
     });
-    console.log(existingFlow);
     if (existingFlow.length > 0) {
       return res
         .status(409)
